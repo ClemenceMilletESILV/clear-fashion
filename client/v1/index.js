@@ -35,6 +35,11 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // I can find on these e-shops
 // 2. Log the variable
 
+console.log('TODO 1');
+
+const cheapest_t_shirt = 'https://www.faguo-store.com/fr/vetements/7606-arcy-t-shirt-en-coton-recycle-kaki.html';
+console.log('Link to the cheapest t-shirt:', cheapest_t_shirt);
+
 /**
  * 👕
  * Easy 😁?
@@ -48,28 +53,74 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 1. Create a variable and assign it the number of products
 // 2. Log the variable
 
+console.log('TODO 2');
+
+const nb_products = marketplace.length ;
+console.log('Number of products:', nb_products);
+
 // 🎯 TODO 3: Brands name
 // 1. Create a variable and assign it the list of brands name only
 // 2. Log the variable
 // 3. Log how many brands we have
+
+console.log('TODO 3');
+
+var brand_names = marketplace.map(x => x.brand );
+function removeDuplicates(arr) {
+  return arr.filter(function(item, index) {return arr.indexOf(item) === index;});
+}
+brand_names = removeDuplicates(brand_names);
+console.log('List of brands:', brand_names);
+console.log('Number of brands:', brand_names.length);
 
 // 🎯 TODO 4: Sort by price
 // 1. Create a function to sort the marketplace products by price
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
 
+console.log('TODO 4');
+
+const sort_by_price = marketplace;
+sort_by_price.sort(function(a,b){return a.price - b.price});
+console.log('Products sorted by price:', sort_by_price);
+
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
 // 2. Create a variable and assign it the list of products by date from recent to old
 // 3. Log the variable
 
+console.log('TODO 5');
+
+const sort_by_date = marketplace;
+sort_by_date.sort(function(a,b) {
+  const date_a = new Date(a.released);
+  const date_b = new Date(b.released);
+  return date_a - date_b});
+console.log('Products sorted by date:', sort_by_date);
+
 // 🎯 TODO 6: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
 // 2. Log the list
 
+console.log('TODO 6');
+
+var price_range = marketplace
+price_range = price_range.filter(function(x) {return x.price >= 50 && x.price <= 100});
+console.log('Products that cost between 50€ and 100€:', price_range);
+
 // 🎯 TODO 7: Average price
 // 1. Determine the average price of the marketplace
 // 2. Log the average
+
+console.log('TODO 7');
+
+function average_price(marketplace) {
+  const { length } = marketplace;
+  return marketplace.reduce((acc, val) => {
+     return acc + (val.price/length);
+  }, 0);
+};
+console.log('Average price:', average_price(marketplace));
 
 /**
  * 🏎
@@ -94,13 +145,43 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 2. Log the variable
 // 3. Log the number of products by brands
 
+console.log('TODO 8');
+
+const brands = new Object();
+for(var i = 0 ; i < brand_names.length ; i++) {
+  var brand = brand_names[i];
+  brands[brand] = [];
+}
+for(var x = 0 ; x < marketplace.length ; x++) {
+  var brand = marketplace[x].brand;
+  brands[brand].push(marketplace[x]);
+}
+console.log('Brands object:', brands);
+
 // 🎯 TODO 9: Sort by price for each brand
 // 1. For each brand, sort the products by price, from highest to lowest
 // 2. Log the sort
 
+console.log('TODO 9');
+
+for(var brand in brands) {
+  console.log(brand, 'sorted by price highest to lowest')
+  console.log(brands[brand].sort(function(a,b) {return b.price - a.price}));
+}
+
 // 🎯 TODO 10: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
 // 2. Log the sort
+
+console.log('TODO 10');
+
+for(var brand in brands) {
+  console.log(brand, 'sorted by date old to recent');
+  console.log(brands[brand].sort(function(a,b) {
+    const date_a = new Date(a.released);
+    const date_b = new Date(b.released);
+    return date_b - date_a}));
+}
 
 /**
  * 💶
@@ -113,6 +194,16 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 1. Compute the p90 price value of each brand
 // The p90 value (90th percentile) is the lower value expected to be exceeded in 90% of the products
 
+console.log('TODO 10');
+
+for(var brand in brands) {
+  var all = brands[brand].sort(function(a,b) {return b.price - a.price});
+  var l = brands[brand].length;
+  l = l*0.9;
+  console.log(brand, 'p90 price value:', brands[brand][Math.round(l)].price);
+}
+
+
 /**
  * 🧥
  * Cool for your effort.
@@ -121,6 +212,8 @@ console.log(MY_FAVORITE_BRANDS[0]);
  * `COTELE_PARIS` is a list of products from https://coteleparis.com/collections/homme?filter.v.availability=1&filter.p.m.gender.type=Homme&sort_by=manual
  * 🧥
  */
+
+console.log('COTELE PARIS');
 
 const COTELE_PARIS = [
   {
@@ -305,17 +398,64 @@ const COTELE_PARIS = [
 // // 1. Log if we have new products only (true or false)
 // // A new product is a product `released` less than 2 weeks.
 
+console.log('TODO 1');
+
+function new_products(list_products) {
+  let d = new Date();
+  d.setDate(d.getDate() - 14);
+  for(var a = 0 ; a < list_products.length ; a++) {
+    const date_released = new Date(list_products[a].released);
+    if(d.toLocaleString() > date_released) {
+      return true;
+    }
+  }
+  return false;
+}
+
+console.log('Do we have new products ?', new_products(COTELE_PARIS));
+
 // 🎯 TODO 2: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
 // // A reasonable price if all the products are less than 100€
+
+console.log('TODO 2');
+
+function reasonable_price(list_products) {
+  for(var a = 0 ; a < list_products.length ; a++) {
+    if(list_products[a].price > 100) {
+      return false;
+    }
+  }
+  return true;
+}
+
+console.log('Is it a reasonable price shop ?', reasonable_price(COTELE_PARIS));
 
 // 🎯 TODO 3: Find a specific product
 // 1. Find the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
 // 2. Log the product
 
+console.log('TODO 3');
+
+for(var a = 0 ; a < COTELE_PARIS.length ; a++) {
+  if(COTELE_PARIS[a].uuid == '2b9a47e3-ed73-52f6-8b91-379e9c8e526c') {
+    console.log('Product with thus specific uuid:', COTELE_PARIS[a]);
+  }
+}
+
 // 🎯 TODO 4: Delete a specific product
 // 1. Delete the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
 // 2. Log the new list of product
+
+console.log('TODO 4');
+
+for(var a = 0 ; a < COTELE_PARIS.length ; a++) {
+  if(COTELE_PARIS[a].uuid == '2b9a47e3-ed73-52f6-8b91-379e9c8e526c') {
+    COTELE_PARIS.splice(a, 1);
+  }
+}
+
+console.log(COTELE_PARIS);
 
 // 🎯 TODO 5: Save the favorite product
 // We declare and assign a variable called `blueJacket`
@@ -340,6 +480,11 @@ jacket.favorite = true;
 // 1. Log `blueJacket` and `jacket` variables
 // 2. What do you notice?
 
+console.log('bluejacket', blueJacket);
+console.log('jacket', jacket);
+
+// The property 'favorite' has been added in both jacket and blueJacket variables
+
 // we make a new assignment again
 blueJacket = {
   'link':
@@ -355,6 +500,12 @@ blueJacket = {
 
 // 3. Update `jacket` property with `favorite` to true WITHOUT changing blueJacket properties
 
+Object.freeze(blueJacket);
+jacket.favorite = true;
+
+console.log('bluejacket', blueJacket);
+console.log('jacket', jacket);
+
 /**
  * 🎬
  * The End: last thing to do
@@ -364,3 +515,6 @@ blueJacket = {
 // 🎯 LAST TODO: Save in localStorage
 // 1. Save MY_FAVORITE_BRANDS in the localStorage
 // 2. log the localStorage
+
+window.localStorage.setItem('MY_FAVORITE_BRANDS', MY_FAVORITE_BRANDS);
+console.log(localStorage);

@@ -1,21 +1,41 @@
 /* eslint-disable no-console, no-process-exit */
-const dedicatedbrand = require('./eshops/dedicatedbrand');
+var fs = require("fs");
 
-async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
-  try {
-    console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
-
-    const products = await dedicatedbrand.scrape(eshop);
-
-    console.log(products);
-    console.log('done');
-    process.exit(0);
-  } catch (e) {
-    console.error(e);
-    process.exit(1);
-  }
+const brands = {
+  './eshops/dedicatedbrand' : 'https://www.dedicatedbrand.com/en/men/t-shirts', 
+  './eshops/montlimartbrand' : 'https://www.montlimart.com/101-t-shirts', 
+  './eshops/circlesportswearbrand' : 'https://shop.circlesportswear.com/collections/t-shirts-homme'
 }
 
-const [,, eshop] = process.argv;
+let allProducts = [];
 
-sandbox(eshop);
+async function sandbox (brands) {
+  for (let i in brands) {
+    const brand = require(i)
+    const eshop = brands[i]
+    console.log('brand:', brand);
+    console.log('eshop:', eshop);
+
+    try {
+      console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
+
+      const products = await brand.scrape(eshop);
+      
+      allProducts.push(products)
+      
+      console.log('done');
+      //process.exit(0);
+    } catch (e) {
+      console.error(e);
+      process.exit(1);
+    }
+  }
+  console.log(allProducts);
+  fs.writeFile("./tshirts.json", JSON.stringify(allProducts), (err) => {
+    if (err) { console.error(err); return; };
+    console.log("Created a JSOn file");
+  });
+}
+
+
+sandbox(brands);
