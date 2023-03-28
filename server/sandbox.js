@@ -33,7 +33,7 @@ async function sandbox (brands) {
   console.log(allProducts);
   fs.writeFile("./tshirts.json", JSON.stringify(allProducts), (err) => {
     if (err) { console.error(err); return; };
-    console.log("Created a JSOn file");
+    console.log("Created a json file");
   });
 }
 
