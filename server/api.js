@@ -14,20 +14,45 @@ app.use(helmet());
 
 app.options('*', cors());
 
+const {MongoClient} = require('mongodb');
+const MONGODB_URI = 'mongodb+srv://waa:mdp@cluster0.zhdnkvq.mongodb.net/?retryWrites=true&w=majority';
 
+async function connect () {
+  const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
+  db = client.db('clearfashion');
+  const collection = db.collection('products');
 
-app.get('/', (request, response) => {
-  response.send({'ack': true});
-});
+  app.get('/', (request, response) => {
+    response.send({'ack': true});
+  });
+  
+  app.get('/products', (request, response) => {
+    response.send({'ack': false});
+  });
+  
+  app.get('/products/all', (request, response) => {
+    response.send(collection.find());
+  });
 
-app.get('/products', (request, response) => {
-  response.send({'ack': true});
-});
+  app.get('/products/:id', (request, response) => {
+    const id = new ObjectID(request.params.id);
+    response.send(collection.find({_id : id}));
+  });
+
+  app.get('/products/search', (request, response) => {
+    const limit = parseInt(request.params.limit) || 12;
+    const brand = parseInt(request.params.brand);
+    const price = parseInt(request.params.price);
+
+    const result = collection.find({brand : brand}, {price : price}).limit(limit); 
+
+    response.send(result);
+  });
+
+}
+
+connect()
 
 app.listen(PORT);
-
-fetch('./tshirts.json')
-  .then((response) => response.json())
-  .then((json) => console.log(json)); 
 
 console.log(`📡 Running on port ${PORT}`);
